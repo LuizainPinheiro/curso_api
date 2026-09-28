@@ -3,6 +3,7 @@ package com.curso_api.service;
 import com.curso_api.dto.InstrutorRequestDTO;
 import com.curso_api.dto.InstrutorResponseDTO;
 import com.curso_api.entity.Instrutor;
+import com.curso_api.mapper.InstrutorMapper;
 import com.curso_api.repository.InstrutorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,46 +12,47 @@ import java.util.List;
 
 @Service
 public class InstrutorService {
-    
-    private final InstrutorRepository instrutorRepository;
 
-    public InstrutorService(InstrutorRepository instrutorRepository) {
+    private final InstrutorRepository instrutorRepository;
+    private final InstrutorMapper instrutorMapper;
+
+    public InstrutorService(InstrutorRepository instrutorRepository, InstrutorMapper instrutorMapper) {
         this.instrutorRepository = instrutorRepository;
+        this.instrutorMapper = instrutorMapper;
     }
 
     public InstrutorResponseDTO criar(InstrutorRequestDTO dto) {
-        Instrutor instrutor = new Instrutor();
-        instrutor.setNome(dto.nome());
-        instrutor.setEmail(dto.email());
+        Instrutor instrutor = instrutorMapper.toEntity(dto);
 
-        Instrutor salvo = instrutorRepository.save(instrutor);
-        return toResponseDTO(salvo);
+        instrutor = instrutorRepository.save(instrutor);
+
+        return instrutorMapper.toResponse(instrutor);
     }
 
     public List<InstrutorResponseDTO> listarTodos() {
         return instrutorRepository.findAll()
                 .stream()
-                .map(this::toResponseDTO)
+                .map(i -> instrutorMapper.toResponse(i))
                 .toList();
     }
 
     public InstrutorResponseDTO buscarPorId(Long id) {
         Instrutor instrutor = instrutorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Instrutor não encontrado com id: " + id));
-        return toResponseDTO(instrutor);
+        return instrutorMapper.toResponse(instrutor);
     }
 
     public InstrutorResponseDTO atualizar(Long id, InstrutorRequestDTO dto) {
         Instrutor instrutor = instrutorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Instrutor não encontrado com id: " + id));
-        instrutor.setNome(dto.nome());
-        instrutor.setEmail(dto.email());
+
+        instrutorMapper.update(dto, instrutor);
 
         return toResponseDTO(instrutorRepository.save(instrutor));
     }
 
     public void deletar(Long id) {
-       instrutorRepository.findById(id)
+        instrutorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Instrutor não encontrado com id: " + id));
         instrutorRepository.deleteById(id);
     }
@@ -63,3 +65,4 @@ public class InstrutorService {
         );
     }
 }
+

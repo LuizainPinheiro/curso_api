@@ -8,8 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "instrutores")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Instrutor {
@@ -24,4 +23,6 @@ public class Instrutor {
 
     @OneToMany(mappedBy = "instrutor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Curso> cursos = new ArrayList<>();
+
+
 }
