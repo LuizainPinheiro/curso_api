@@ -18,5 +18,6 @@ public interface CursoMapper {
     Curso toEntity(CursoRequestDTO cursoRequestDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "instrutor", ignore = true)
     void update(CursoRequestDTO dto, @MappingTarget Curso curso);
 }

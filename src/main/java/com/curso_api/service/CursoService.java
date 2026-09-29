@@ -46,16 +46,12 @@ public class CursoService {
     public CursoResponseDTO criar(CursoRequestDTO cursoRequestDto) {
         Curso curso = cursoMapper.toEntity(cursoRequestDto);
 
-        //busca o instrutor no banco
         Instrutor instrutor = instrutorRepository.findById(cursoRequestDto.instrutorId())
                 .orElseThrow(() -> new RuntimeException("Instrutor não encontrado"));
 
-        cursoMapper.update(cursoRequestDto, curso);
-
-        //usa o instrutor que já existe
         curso.setInstrutor(instrutor);
 
-        return cursoMapper.toResponse( cursoRepository.save(curso));
+        return cursoMapper.toResponse(cursoRepository.save(curso));
     }
 
     public CursoResponseDTO atualizar(Long cursoId, CursoRequestDTO cursoRequestDto){

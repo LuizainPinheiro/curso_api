@@ -6,6 +6,6 @@ public record CursoResponseDTO(
         String nome,
         String descricao,
         Integer cargaHoraria,
-        Long instrutorNome
+        String instrutorNome
 ) {
 }
