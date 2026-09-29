@@ -1,0 +1,35 @@
+name: CI da API
+
+# Define quais eventos do Git vão disparar a execução automatizada deste workflow
+on:
+  # Dispara a automação sempre que houver um 'push' de código na branch 'master'
+  push:
+    branches: ["master"]
+  # Dispara a automação em Pull Requests direcionados a qualquer branch ("**")
+  pull_request:
+    branches: ["**"]
+
+# Grupo de tarefas (jobs) que o workflow executará
+jobs:
+  # Nome/Identificador da tarefa principal de compilação e teste
+  build:
+    # Define o sistema operacional da máquina virtual (runner) do GitHub Actions
+    runs-on: ubuntu-latest
+    
+    # Lista de passos sequenciais que serão executados dentro dessa máquina
+    steps:
+      # 1. Clona/baixa o código-fonte do repositório para o ambiente de execução
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Instala e configura a JDK do Java e o cache do Maven
+      - name: Configure Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"      # Define a versão do Java como 21
+          distribution: "temurin"  # Utiliza a distribuição Eclipse Temurin (OpenJDK)
+          cache: maven            # Salva em cache as dependências do Maven (~/.m2) para agilizar os próximos builds
+
+      # 3. Executa a compilação, roda os testes unitários e gera o pacote (.jar)
+      - name: build
+        run: ./mvnw -B package    # -B roda em "batch mode", ocultando logs excessivos e sem pedir interações do usuário
