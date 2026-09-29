@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: ["**"]
 
-# Grupo de tarefas (jobs) que o workflow executará
+# Grupo de tarefas que o workflow executará
 jobs:
   # Nome/Identificador da tarefa principal de compilação e teste
   build:
