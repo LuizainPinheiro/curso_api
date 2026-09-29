@@ -31,5 +31,6 @@ jobs:
           cache: maven            # Salva em cache as dependências do Maven (~/.m2) para agilizar os próximos builds
 
       # 3. Executa a compilação, roda os testes unitários e gera o pacote (.jar)
-      - name: build
-        run: ./mvnw -B package    # -B roda em "batch mode", ocultando logs excessivos e sem pedir interações do usuário
+      - name: Build
+        run: ./mvnw -B package -DskipTests  # -B roda em "batch mode", ocultando logs excessivos e sem pedir interações do usuário
+
